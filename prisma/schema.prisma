@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pgmigrations {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(255)
+  run_on DateTime @db.Timestamp(6)
+}
+
+model drug {
+  id          Int       @id @default(autoincrement())
+  description String?
+  name        String?
+  released    DateTime? @db.Date
+  disease     disease[]
+}
+
+model disease {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  drugId Int?
+  drug   drug?   @relation(fields: [drugId], references: [id], onUpdate: NoAction)
+}

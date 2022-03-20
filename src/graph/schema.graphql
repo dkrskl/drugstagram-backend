@@ -1,0 +1,53 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Drug {
+  description: String!
+
+  """Diseases this drug is associated with."""
+  diseases: [String!]
+  id: Float!
+  name: String!
+
+  """Initial release date for the drug."""
+  released: DateTime!
+}
+
+input DrugOrder {
+  direction: OrderDirection!
+  field: DrugOrderField!
+}
+
+"""Properties by which drugs can be ordered."""
+enum DrugOrderField {
+  id
+  name
+}
+
+type DrugPaginated {
+  results: [Drug!]!
+  totalCount: Int!
+}
+
+input DrugsQuery {
+  orderBy: DrugOrder
+  page: Float!
+  resultsPerPage: Float!
+  search: String
+}
+
+"""Possible directions for ordering items in the list."""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type Query {
+  drugs(query: DrugsQuery!): DrugPaginated!
+}

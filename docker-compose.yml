@@ -1,0 +1,34 @@
+version: "3.4"
+services:
+  database:
+    container_name: "database"
+    image: postgres
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  api:
+    container_name: "api"
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - ${API_PORT}:${API_PORT}
+    volumes:
+      - ./node_modules/.prisma/client:/usr/src/app/node_modules/.prisma/client:cached
+      - ./src:/usr/src/app/src:cached
+      - ./prisma:/usr/src/app/prisma:cached
+      - ./migrations:/usr/src/app/migrations:cached
+      - ./.env:/usr/src/app/.env:cached
+      - ./tsconfig.build.json:/usr/src/app/tsconfig.build.json:cached
+      - ./tsconfig.json:/usr/src/app/tsconfig.json:cached
+    depends_on:
+      - database
+volumes:
+  db-data:
+    driver: local
